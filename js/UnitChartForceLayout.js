@@ -39,11 +39,11 @@ export default function UnitChartForceLayout(aqTable, canvas, simulation) {
       .nodes(data, (d) => d.id)
       .force(
         "collide",
-        d3.forceCollide().radius((d) => 1 + size(d))
+        d3.forceCollide().radius((d) => size(d) * 0.8)
       )
-      .force("x", d3.forceX(width / 2).strength(0.1))
-      .force("y", d3.forceY(height / 2).strength(0.05))
-      .alpha(0.8)
+      .force("x", d3.forceX(width / 2).strength(0.2))
+      .force("y", d3.forceY(height / 2).strength(0.2))
+      .alpha(0.2)
       .stop();
 
     rect.join(

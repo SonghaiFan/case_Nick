@@ -103,13 +103,13 @@ const handleStepChange = ({ element, direction, index }) => {
     case 2:
       UnitchartGridLayoutId(data_articleIndentity, canvas, simulation).margin({
         top: 100,
-        right: 800,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
       UnitchartGridLayoutKey(data_groupsIssues, canvas, simulation).margin({
         top: 100,
-        right: 800,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
@@ -118,7 +118,7 @@ const handleStepChange = ({ element, direction, index }) => {
         top: 100,
         right: 100,
         bottom: 100,
-        left: 1250,
+        left: 800,
       })();
       break;
 
@@ -129,7 +129,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 800,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
@@ -139,7 +139,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 800,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
@@ -148,7 +148,7 @@ const handleStepChange = ({ element, direction, index }) => {
         top: 100,
         right: 100,
         bottom: 100,
-        left: 1250,
+        left: 800,
       })();
 
       break;
@@ -209,7 +209,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 1050,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
@@ -228,7 +228,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 1050,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
@@ -247,7 +247,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 1050,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
@@ -262,7 +262,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 200,
-        right: 1050,
+        right: 600,
         bottom: 100,
         left: 100,
       })();
@@ -278,7 +278,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 1050,
+        right: 600,
         bottom: 100,
         left: 100,
       })();

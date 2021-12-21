@@ -4,7 +4,7 @@ export default function SankeyChart(aqTable, canvas, simulation) {
     top: 100,
     right: 100,
     bottom: 100,
-    left: 1000,
+    left: 800,
   };
 
   function chart() {

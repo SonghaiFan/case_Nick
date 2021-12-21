@@ -3,9 +3,9 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
   // CANVAS SETUP
   let margin = {
     top: 100,
-    right: 400,
+    right: 200,
     bottom: 100,
-    left: 400,
+    left: 200,
   };
 
   function chart() {
