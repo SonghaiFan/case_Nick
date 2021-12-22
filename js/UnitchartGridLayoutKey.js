@@ -2,9 +2,9 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
   // CANVAS SETUP
   let margin = {
     top: 100,
-    right: 400,
+    right: 200,
     bottom: 100,
-    left: 400,
+    left: 200,
   };
 
   function chart() {
@@ -91,12 +91,34 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
 
     const colorScale = d3
       .scaleOrdinal()
-      .domain(keyArray)
-      .range(
-        d3
-          .range(1, keyArray.length)
-          .map((v) => d3.interpolateTurbo(v / keyArray.length))
-      );
+      .domain([
+        "firstnations",
+        "racialminorities",
+        "women",
+        "children",
+        "youngpeople",
+        "unemployedorprecariouslyemployed",
+        "peoplewithdisabilitiesorchronichealthconditions",
+        "shelter",
+        "healthcare_health",
+        "familyrelations",
+        "violence",
+        "voice",
+        "work",
+        "crime_criminaljustice",
+        "inequality",
+        "prejudiceanddiscrimination_general",
+      ])
+      .range(d3.range(1, 17).map((v) => d3.interpolateTurbo(v / 16)));
+
+    // const colorScale = d3
+    //   .scaleOrdinal()
+    //   .domain(keyArray)
+    //   .range(
+    //     d3
+    //       .range(1, keyArray.length)
+    //       .map((v) => d3.interpolateTurbo(v / keyArray.length))
+    //   );
 
     // RENDER
 
@@ -146,16 +168,7 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
         return update
           .transition()
           .duration(750)
-          .attr("x", (d, i) =>
-            idArray.length < 3
-              ? xScale(xValue(d)) +
-                Math.max(
-                  0,
-                  xScale.bandwidth() * Math.random() -
-                    Math.min(300, xScale2.bandwidth())
-                )
-              : xScale(xValue(d)) + xScale2(xValue2(d))
-          )
+          .attr("x", (d) => xScale(xValue(d)) + xScale2(xValue2(d)))
           .attr("y", (d) => yScale(yValue(d)) + yScale2(yValue2(d)))
           .attr("height", Math.min(25, yScale2.bandwidth()))
           .attr("width", Math.min(300, xScale2.bandwidth()))

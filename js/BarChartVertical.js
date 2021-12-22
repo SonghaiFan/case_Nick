@@ -69,15 +69,6 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
 
     const keyArray = Array.from(new Set(data3.map((d) => d[groupKey])));
 
-    // const colorScale = d3
-    //   .scaleOrdinal()
-    //   .domain(keyArray)
-    //   .range(
-    //     d3
-    //       .range(1, keyArray.length)
-    //       .map((v) => d3.interpolateTurbo(v / keyArray.length))
-    //   );
-
     const colorScale = d3
       .scaleOrdinal()
       .domain([
@@ -102,7 +93,9 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
 
     console.log(data3);
 
-    const rect = g3.selectAll("rect").data(data3, (d) => d[groupKey]);
+    const rect = g3
+      .selectAll("rect")
+      .data(data3, (d) => (d.name ? d.name : d[groupKey]));
 
     rect.join(
       (enter) =>

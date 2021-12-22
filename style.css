@@ -59,7 +59,7 @@ nav {
 figure {
   position: sticky;
   margin: 0;
-  /* shape-rendering: optimizeSpeed; */
+  shape-rendering: optimizeSpeed;
   z-index: 0;
 }
 

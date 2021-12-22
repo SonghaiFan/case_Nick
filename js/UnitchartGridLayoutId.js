@@ -2,9 +2,9 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
   // CANVAS SETUP
   let margin = {
     top: 100,
-    right: 400,
+    right: 200,
     bottom: 100,
-    left: 400,
+    left: 200,
   };
 
   function chart() {
@@ -19,6 +19,12 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
       gy = canvas.select("#yAxisGroup");
 
     const tooltip = d3.select("#tooltipContainer");
+
+    gm.transition()
+      .duration(750)
+      .attr("opacity", 0)
+      .end()
+      .then(gm.selectAll("*").remove());
 
     g1.transition()
       .duration(750)
