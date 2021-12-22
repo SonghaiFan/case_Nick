@@ -36,7 +36,7 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
     const data = aqTable.orderby("id").objects();
 
     // RENDER PREPERATION
-    const gap = 0;
+    const gap = 0.1;
 
     const idArray = Array.from(new Set(data.map((d) => d.id)));
 
@@ -71,7 +71,6 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
           .append("rect")
           .attr("id", (d, i) => "rect" + d.id)
           .attr("stroke", "white")
-          .attr("stroke-width", 5)
           .attr("x", (d, i) => xScale(xValue(d)))
           .attr("y", (d, i) => yScale(yValue(d)))
           .attr("width", xScale.bandwidth());

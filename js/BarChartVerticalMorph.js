@@ -180,12 +180,14 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
           const rectUpdateTransition = update
             .transition()
             .duration(750)
-            // .ease(d3.easeExpIn)
-            // .delay(
-            //   (d, i) =>
-            //     (keyArray.length - keyArray.indexOf(d[groupKey])) * 750 + i * 10
-            // )
-            .delay((d, i) => d.id * 100 + i * 10)
+            .delay((d, i) =>
+              keyArray.length - keyArray.indexOf(d[groupKey]) > 3
+                ? 5000 +
+                  (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 +
+                  i * 10
+                : (keyArray.length - keyArray.indexOf(d[groupKey])) * 750 +
+                  i * 10
+            )
             .attr("y", (d) => yScale(d[groupKey]))
             .attr("x", (d) => xScale(d.value_stackmin) + margin.left - 100)
             .attr("height", yScale.bandwidth())

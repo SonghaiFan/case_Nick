@@ -6,6 +6,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  background-color: coral;
 }
 
 p {
@@ -38,7 +39,10 @@ p {
 #scrolly {
   position: relative;
   display: flex;
-  background-color: #ffffff;
+  background-color: white;
+  background-color: black;
+  color: black;
+  color: white;
   padding: 1rem;
 }
 
@@ -66,7 +70,8 @@ figure {
 .step {
   margin: 0 auto 2rem auto;
   padding: 5px;
-  box-shadow: 10px 10px 10px rgba(120, 120, 120, 0.2);
+  /* box-shadow: 10px 10px 10px rgba(48, 48, 48, 0.623); */
+  box-shadow: 0px 10px 75px -3px rgba(117, 94, 94, 0.24);
   opacity: 0.1;
   transition: ease, 1s;
 }
@@ -116,6 +121,7 @@ text {
 .linksGroup {
   fill: none;
   stroke: lightgray;
+  stroke: gray;
   opacity: 0.4;
   mix-blend-mode: multiply;
 }
@@ -127,6 +133,7 @@ text {
 
 .linkGroup:hover {
   stroke: black;
+  stroke: lightgray;
   opacity: 0.5;
 }
 

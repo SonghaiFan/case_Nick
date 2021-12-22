@@ -237,14 +237,15 @@ export default function SankeyChart(aqTable, canvas, simulation) {
 
         let articleInPath = linksByPath.get(overedPath);
 
-        g1.selectAll("rect").attr("fill", "lightgray");
+        // g1.selectAll("rect").attr("fill", "lightgray");
 
         articleInPath.forEach(function (i) {
           let articleRect = g1.select(`#rect${i.id}`);
           articleRect.attr("fill", "gray");
         });
 
-        g1.select(`#${overedRectId}`).attr("fill", "black");
+        // g1.select(`#${overedRectId}`).attr("fill", "black");
+        g1.select(`#${overedRectId}`).attr("fill", "darkgray");
       })
       .on("mouseout", function (e, d) {
         d3.select(this).attr("stroke-width", (d) => Math.max(1, d.width));
@@ -284,7 +285,7 @@ export default function SankeyChart(aqTable, canvas, simulation) {
 
     node
       .on("mouseover", function (e, d) {
-        g1.selectAll("rect").attr("fill", "lightgray");
+        // g1.selectAll("rect").attr("fill", "lightgray");
         let articleInNode = d.sourceLinks.length
           ? d.sourceLinks
           : d.targetLinks;
