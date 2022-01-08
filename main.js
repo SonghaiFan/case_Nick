@@ -54,6 +54,10 @@ const handleResize = () => {
 const handleStepChange = ({ element, direction, index }) => {
   // response = { element, direction, index }
 
+  const containerRect = figure.node().getBoundingClientRect(),
+    containerWidth = containerRect.width,
+    containerHeight = containerRect.height;
+
   // add color to current step only
   step.classed("is-active", (_, i) => i === index);
   console.log(element, direction, index);
@@ -108,7 +112,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
@@ -118,7 +122,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
@@ -131,7 +135,7 @@ const handleStepChange = ({ element, direction, index }) => {
         top: 100,
         right: 100,
         bottom: 100,
-        left: 800,
+        left: containerWidth / 2,
       })();
 
       break;
@@ -139,13 +143,13 @@ const handleStepChange = ({ element, direction, index }) => {
     case 3:
       UnitchartGridLayoutId(data_articleIndentity, canvas, simulation).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
       UnitchartGridLayoutKey(data_groupsIssues, canvas, simulation).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
@@ -154,7 +158,7 @@ const handleStepChange = ({ element, direction, index }) => {
         top: 100,
         right: 100,
         bottom: 100,
-        left: 800,
+        left: containerWidth / 2,
       })();
       break;
 
@@ -165,7 +169,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
@@ -175,7 +179,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
@@ -184,123 +188,157 @@ const handleStepChange = ({ element, direction, index }) => {
         top: 100,
         right: 100,
         bottom: 100,
-        left: 800,
+        left: containerWidth / 2,
       })();
       break;
 
     case 5:
-      UnitchartGridLayoutId(
-        data_atLeast25articleIdentity.filter((d) => d.id == 1),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 600,
-        bottom: 100,
-        left: 100,
-      })();
-      UnitchartGridLayoutKey(
-        data_atLeast25groupsIssues.filter((d) => d.id == 1),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 600,
-        bottom: 100,
-        left: 100,
-      })();
-
-      BarChartVertical(
-        data_atLeast25groupsIssues.filter((d) => d.id == 1),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 100,
-        bottom: 100,
-        left: 800,
-      })();
+      BarChartHorizontal(data_atLeast25groupsIssues, canvas, simulation).margin(
+        {
+          top: 100,
+          right: 100,
+          bottom: 100,
+          left: 100,
+        }
+      )();
 
       canvas
-        .select("#linksGroup")
+        .select("#figure2Group")
         .transition()
-        .duration(500)
+        .duration(750)
         .style("opacity", 0)
         .end()
-        .then(d3.selectAll(".linkGroup").remove());
-      break;
+        .then(canvas.select("#figure2Group").selectAll("*").remove());
 
-    case 6:
-      canvas
-        .select("#xAxisGroup")
-        .transition()
-        .duration(500)
-        .style("opacity", 0);
-
-      canvas
-        .select("#yAxisGroup")
-        .transition()
-        .duration(500)
-        .style("opacity", 0);
-
-      simulation.stop();
-      SankeyChart(
-        data_atLeast25groupsIssues.filter((d) => d.id == 1),
+      UnitChartForceLayout(
+        data_atLeast25articleIdentity.sample(0),
         canvas,
         simulation
       )();
+      // UnitchartGridLayoutId(
+      //   data_atLeast25articleIdentity.filter((d) => d.id == 1),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: containerWidth / 2,
+      //   bottom: 100,
+      //   left: 100,
+      // })();
+      // UnitchartGridLayoutKey(
+      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: containerWidth / 2,
+      //   bottom: 100,
+      //   left: 100,
+      // })();
 
-      UnitchartGridLayoutId(
-        data_atLeast25articleIdentity.filter((d) => d.id == 1),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 600,
-        bottom: 100,
-        left: 100,
-      })();
-      UnitchartGridLayoutKey(
-        data_atLeast25groupsIssues.filter((d) => d.id == 1),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 600,
-        bottom: 100,
-        left: 100,
-      })();
+      // BarChartVertical(
+      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: 100,
+      //   bottom: 100,
+      //   left: containerWidth / 2,
+      // })();
+
+      // canvas
+      //   .select("#linksGroup")
+      //   .transition()
+      //   .duration(500)
+      //   .style("opacity", 0)
+      //   .end()
+      //   .then(d3.selectAll(".linkGroup").remove());
+      break;
+
+    case 6:
+      // canvas
+      //   .select("#xAxisGroup")
+      //   .transition()
+      //   .duration(500)
+      //   .style("opacity", 0);
+
+      // canvas
+      //   .select("#yAxisGroup")
+      //   .transition()
+      //   .duration(500)
+      //   .style("opacity", 0);
+
+      // simulation.stop();
+      // SankeyChart(
+      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: 100,
+      //   bottom: 100,
+      //   left: containerWidth / 2,
+      // })();
+
+      // UnitchartGridLayoutId(
+      //   data_atLeast25articleIdentity.filter((d) => d.id == 1),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: containerWidth / 2,
+      //   bottom: 100,
+      //   left: 100,
+      // })();
+
+      // UnitchartGridLayoutKey(
+      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: containerWidth / 2,
+      //   bottom: 100,
+      //   left: 100,
+      // })();
 
       break;
 
     case 7:
-      simulation.stop();
-      SankeyChart(
-        data_atLeast25groupsIssues.filter((d) => d.id < 5),
-        canvas,
-        simulation
-      )();
+      // simulation.stop();
+      // SankeyChart(
+      //   data_atLeast25groupsIssues.filter((d) => d.id < 5),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: 100,
+      //   bottom: 100,
+      //   left: containerWidth / 2,
+      // })();
 
-      UnitchartGridLayoutId(
-        data_atLeast25articleIdentity.filter((d) => d.id < 5),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 600,
-        bottom: 100,
-        left: 100,
-      })();
-      UnitchartGridLayoutKey(
-        data_atLeast25groupsIssues.filter((d) => d.id < 5),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 600,
-        bottom: 100,
-        left: 100,
-      })();
+      // UnitchartGridLayoutId(
+      //   data_atLeast25articleIdentity.filter((d) => d.id < 5),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: containerWidth / 2,
+      //   bottom: 100,
+      //   left: 100,
+      // })();
+
+      // UnitchartGridLayoutKey(
+      //   data_atLeast25groupsIssues.filter((d) => d.id < 5),
+      //   canvas,
+      //   simulation
+      // ).margin({
+      //   top: 100,
+      //   right: containerWidth / 2,
+      //   bottom: 100,
+      //   left: 100,
+      // })();
       break;
 
     case 8:
@@ -316,7 +354,12 @@ const handleStepChange = ({ element, direction, index }) => {
         data_atLeast25groupsIssues.filter((d) => d.id < 6),
         canvas,
         simulation
-      )();
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: containerWidth / 2,
+      })();
 
       UnitChartForceLayout(
         data_atLeast25articleIdentity.filter((d) => d.id < 6),
@@ -324,7 +367,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 200,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
@@ -335,7 +378,12 @@ const handleStepChange = ({ element, direction, index }) => {
         data_atLeast25groupsIssues.filter((d) => d.id < 10),
         canvas,
         simulation
-      )();
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: containerWidth / 2,
+      })();
 
       UnitChartForceLayout(
         data_atLeast25articleIdentity.filter((d) => d.id < 10),
@@ -343,7 +391,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
@@ -351,7 +399,12 @@ const handleStepChange = ({ element, direction, index }) => {
 
     case 10:
       simulation.stop();
-      SankeyChart(data_atLeast25groupsIssues, canvas, simulation)();
+      SankeyChart(data_atLeast25groupsIssues, canvas, simulation).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: containerWidth / 2,
+      })();
 
       UnitchartGridLayoutId(
         data_atLeast25articleIdentity,
@@ -359,7 +412,7 @@ const handleStepChange = ({ element, direction, index }) => {
         simulation
       ).margin({
         top: 100,
-        right: 600,
+        right: containerWidth / 2,
         bottom: 100,
         left: 100,
       })();
