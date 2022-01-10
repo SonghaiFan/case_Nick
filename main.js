@@ -215,130 +215,13 @@ const handleStepChange = ({ element, direction, index }) => {
         canvas,
         simulation
       )();
-      // UnitchartGridLayoutId(
-      //   data_atLeast25articleIdentity.filter((d) => d.id == 1),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
-      // UnitchartGridLayoutKey(
-      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
 
-      // BarChartVertical(
-      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: 100,
-      //   bottom: 100,
-      //   left: containerWidth / 2,
-      // })();
-
-      // canvas
-      //   .select("#linksGroup")
-      //   .transition()
-      //   .duration(500)
-      //   .style("opacity", 0)
-      //   .end()
-      //   .then(d3.selectAll(".linkGroup").remove());
       break;
 
     case 6:
-      // canvas
-      //   .select("#xAxisGroup")
-      //   .transition()
-      //   .duration(500)
-      //   .style("opacity", 0);
-
-      // canvas
-      //   .select("#yAxisGroup")
-      //   .transition()
-      //   .duration(500)
-      //   .style("opacity", 0);
-
-      // simulation.stop();
-      // SankeyChart(
-      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: 100,
-      //   bottom: 100,
-      //   left: containerWidth / 2,
-      // })();
-
-      // UnitchartGridLayoutId(
-      //   data_atLeast25articleIdentity.filter((d) => d.id == 1),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
-
-      // UnitchartGridLayoutKey(
-      //   data_atLeast25groupsIssues.filter((d) => d.id == 1),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
-
       break;
 
     case 7:
-      // simulation.stop();
-      // SankeyChart(
-      //   data_atLeast25groupsIssues.filter((d) => d.id < 5),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: 100,
-      //   bottom: 100,
-      //   left: containerWidth / 2,
-      // })();
-
-      // UnitchartGridLayoutId(
-      //   data_atLeast25articleIdentity.filter((d) => d.id < 5),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
-
-      // UnitchartGridLayoutKey(
-      //   data_atLeast25groupsIssues.filter((d) => d.id < 5),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
       break;
 
     case 8:
