@@ -218,13 +218,23 @@ const handleStepChange = ({ element, direction, index }) => {
   step.classed("is-active", (_, i) => i === index);
   console.log(element, direction, index);
 
+  canvas
+    .select("#morphGroup")
+    .selectAll("rect")
+    .transition()
+    .attr("opacity", 0)
+    .end()
+    .then(canvas.select("#morphGroup").selectAll("*").remove());
+
   switch (index) {
     case 0:
+      // g1
       UnitchartGridLayoutId(
         data_articleIndentity.filter((d) => d.id == 1),
         canvas,
         simulation
       )();
+      // g2
       UnitchartGridLayoutKey(
         data_groupsIssues.filter((d) => d.id == 1),
         canvas,
@@ -263,7 +273,7 @@ const handleStepChange = ({ element, direction, index }) => {
 
     case 2:
       UnitchartGridLayoutId(
-        data_articleIndentity.filter((d) => d.id < 21),
+        data_articleIndentity.filter((d) => d.id < 50),
         canvas,
         simulation
       ).margin({
@@ -273,7 +283,7 @@ const handleStepChange = ({ element, direction, index }) => {
         left: 100,
       })();
       UnitchartGridLayoutKey(
-        data_groupsIssues.filter((d) => d.id < 21),
+        data_groupsIssues.filter((d) => d.id < 50),
         canvas,
         simulation
       ).margin({
@@ -284,7 +294,7 @@ const handleStepChange = ({ element, direction, index }) => {
       })();
 
       BarChartVerticalMorph(
-        data_groupsIssues.filter((d) => d.id < 21),
+        data_groupsIssues.filter((d) => d.id < 50),
         canvas,
         simulation
       ).margin({
@@ -357,14 +367,7 @@ const handleStepChange = ({ element, direction, index }) => {
           left: 100,
         }
       )();
-
-      canvas
-        .select("#figure2Group")
-        .transition()
-        .duration(750)
-        .style("opacity", 0)
-        .end()
-        .then(canvas.select("#figure2Group").selectAll("*").remove());
+      canvas.select("#figure2Group").selectAll("*").remove();
 
       UnitChartForceLayout(
         data_atLeast25articleIdentity.sample(0),
@@ -386,11 +389,7 @@ const handleStepChange = ({ element, direction, index }) => {
         left: 100,
       })();
 
-      canvas
-        .select("#figure3Group")
-        .transition()
-        .duration(750)
-        .style("opacity", 0);
+      canvas.select("#figure3Group").selectAll("*").remove();
       break;
 
     case 7:
@@ -405,13 +404,7 @@ const handleStepChange = ({ element, direction, index }) => {
       break;
 
     case 8:
-      canvas
-        .select("#figure3Group")
-        .transition()
-        .duration(750)
-        .style("opacity", 0)
-        .end()
-        .then(canvas.select("#figure3Group").selectAll("*").remove());
+      // canvas.select("#figure3Group").selectAll("*").remove();
 
       BarChartHorizontalStackedNormal(
         data_atLeast25groupsIssues,
@@ -535,10 +528,32 @@ const handleStepChange = ({ element, direction, index }) => {
       //   left: 100,
       // })();
       break;
+
+    case 12:
+      StreamChartCurve(
+        data_atLeast25groupsIssues.filter((d) => d.group_or_issue == "group"),
+        canvas,
+        simulation
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: 100,
+      })();
+      // SankeyChart(data_groupsIssues, canvas, simulation)();
+
+      // UnitchartGridLayoutId(data_articleIndentity, canvas, simulation).margin({
+      //   top: 100,
+      //   right: 1050,
+      //   bottom: 100,
+      //   left: 100,
+      // })();
+      break;
   }
 };
 
 const initialRender = () => {
+  canvas.append("clipPath").append("rect").attr("id", "clipRect");
   canvas.append("g").attr("id", "figure1Group");
   canvas.append("g").attr("id", "figure2Group");
   canvas.append("g").attr("id", "figure3Group");

@@ -60,27 +60,35 @@ export default function StreamChartStep(aqTable, canvas, simulation) {
 
     const xScale = d3
       .scaleTime()
-      .domain([
-        d3.min(data.map((d) => d3.timeMonth.offset(d.year_month, -1))),
-        d3.max(data.map((d) => d3.timeMonth.offset(d.year_month, 1))),
-      ])
+      .domain(d3.extent(data, (d) => d.year_month))
       .range([0, width]);
 
     const xScaleLength = d3.timeMonth.range(...xScale.domain()).length;
 
-    g3.transition()
-      .duration(750)
-      .style("opacity", 1)
-      .attr(
-        "transform",
-        `translate(${margin.left - width / xScaleLength / 2},${margin.top})`
-      );
+    g3.style("opacity", 1).attr(
+      "transform",
+      `translate(${margin.left},${margin.top})`
+    );
 
     const area = d3
       .area()
       .x((d) => xScale(d.data.year_month))
       .y0((d) => yScale(d[0]))
       .y1((d) => yScale(d[1]))
+      .curve(d3.curveStepAfter);
+
+    const area0 = d3
+      .area()
+      .x((d) => xScale(d.data.year_month))
+      .y0((d) => yScale(d[0]))
+      .y1((d) => yScale(d[0]))
+      .curve(d3.curveStepAfter);
+
+    const area1 = d3
+      .area()
+      .x((d) => xScale(d.data.year_month))
+      .y0((d) => yScale(d[0]))
+      .y1((d) => 0)
       .curve(d3.curveStepAfter);
 
     gx.transition()
@@ -128,24 +136,30 @@ export default function StreamChartStep(aqTable, canvas, simulation) {
         const rectEner = enter
           .append("path")
           .attr("fill", (d) => colorScale(d.key))
-          .attr("d", area);
+          .attr("d", area1)
+          .attr("opacity", 1);
 
         return rectEner;
       },
       function (update) {
         const rectUpdateTransition = update
           .transition()
-          .duration(1000)
+          .duration(750)
+          .attr("opacity", 1)
           .attrTween("d", function (d) {
             var previous = d3.select(this).attr("d");
-            var current = area(d);
+            var current = area1(d);
             return d3.interpolatePath(previous, current);
           });
 
         return rectUpdateTransition;
       },
       function (exit) {
-        return exit.remove();
+        const rectExitTransition = exit
+          .transition()
+          .duration(750)
+          .attr("opacity", 0);
+        return rectExitTransition;
       }
     );
   }

@@ -8,13 +8,17 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
     left: 200,
   };
 
-  let groupKey = "year_month";
+  let DateRange = {
+    startDate: new Date(2020, 0, 1),
+    endDate: new Date(2021, 11, 30),
+  };
 
   function chart() {
     const width = canvas.attr("width") - margin.left - margin.right,
       height = canvas.attr("height") - margin.top - margin.bottom;
 
-    const g1 = canvas.select("#figure1Group"),
+    const cp = canvas.select("#clipRect"),
+      g1 = canvas.select("#figure1Group"),
       g2 = canvas.select("#figure2Group"),
       g3 = canvas.select("#figure3Group"),
       gm = canvas.select("#morphGroup"),
@@ -35,27 +39,11 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
     const data0 = aqTable.objects();
     const keyArray = Array.from(new Set(data0.map((d) => d.key))).sort();
 
-    const dtg = aqTable
-      .groupby("year_month")
-      .pivot("key", { value: (d) => (op.sum(d.value) ? op.sum(d.value) : 0) })
-      .orderby("year_month");
-
-    const dtg1 = aqTable
+    const data = aqTable
       .groupby("year_month")
       .pivot("key", { value: (d) => (op.sum(d.value) ? op.sum(d.value) : 0) })
       .orderby("year_month")
-      .slice(-1)
-      .derive({
-        year_month: aq.escape((d) => d3.timeMonth.offset(d.year_month, 1)),
-      });
-
-    const data = dtg.slice(0, -1).concat(dtg1).orderby("year_month").objects();
-
-    // const data = aqTable
-    //   .groupby("year_month")
-    //   .pivot("key", { value: (d) => (op.sum(d.value) ? op.sum(d.value) : 0) })
-    //   .orderby("year_month")
-    //   .objects();
+      .objects();
 
     const stack = d3.stack().keys(keyArray).offset(d3.stackOffsetExpand);
 
@@ -71,10 +59,7 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
 
     const xScale = d3
       .scaleTime()
-      .domain([
-        d3.min(data.map((d) => d3.timeMonth.offset(d.year_month, -1))),
-        d3.max(data.map((d) => d3.timeMonth.offset(d.year_month, 1))),
-      ])
+      .domain(d3.extent(data, (d) => d.year_month))
       .range([0, width]);
 
     const area = d3
@@ -84,46 +69,19 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
       .y1((d) => yScale(d[1]))
       .curve(d3.curveBumpX);
 
-    function pathTween(d1, precision) {
-      return function () {
-        var path0 = this,
-          path1 = path0.cloneNode(),
-          n0 = path0.getTotalLength(),
-          n1 = (path1.setAttribute("d", d1), path1).getTotalLength();
+    const area0 = d3
+      .area()
+      .x((d) => xScale(d.data.year_month))
+      .y0((d) => yScale(d[0]))
+      .y1((d) => yScale(d[0]))
+      .curve(d3.curveBumpX);
 
-        // Uniform sampling of distance based on specified precision.
-        var distances = [0],
-          i = 0,
-          dt = precision / Math.max(n0, n1);
-        while ((i += dt) < 1) distances.push(i);
-        distances.push(1);
-
-        // Compute point-interpolators at each distance.
-        var points = distances.map(function (t) {
-          var p0 = path0.getPointAtLength(t * n0),
-            p1 = path1.getPointAtLength(t * n1);
-          return d3.interpolate([p0.x, p0.y], [p1.x, p1.y]);
-        });
-
-        return function (t) {
-          return t < 1
-            ? "M" +
-                points
-                  .map(function (p) {
-                    return p(t);
-                  })
-                  .join("L")
-            : d1;
-        };
-      };
-    }
-
-    function transition(d) {
-      d3.select(this)
-        .transition()
-        .duration(1000)
-        .attrTween("d", pathTween(area(d), 30));
-    }
+    const area1 = d3
+      .area()
+      .x((d) => xScale(d.data.year_month))
+      .y0((d) => yScale(d[0]))
+      .y1((d) => 0)
+      .curve(d3.curveBumpX);
 
     gx.transition()
       .duration(750)
@@ -163,6 +121,11 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
       ])
       .range(d3.range(1, 17).map((v) => d3.interpolateTurbo(v / 16)));
 
+    cp.attr("x", margin.left)
+      .attr("y", margin.top)
+      .attr("height", height)
+      .attr("width", width);
+
     const path = g3.selectAll("path").data(dataStacked, (d) => d.key);
 
     path.join(
@@ -170,24 +133,39 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
         const rectEner = enter
           .append("path")
           .attr("fill", (d) => colorScale(d.key))
-          .attr("d", area);
+          .attr("d", area0);
 
-        return rectEner;
+        const rectEnerTransition = rectEner
+          .transition()
+          .duration(750)
+          .attr("opacity", 1)
+          .attrTween("d", function (d) {
+            var previous = d3.select(this).attr("d");
+            var current = area1(d);
+            return d3.interpolatePath(previous, current);
+          });
+
+        return rectEnerTransition;
       },
       function (update) {
         const rectUpdateTransition = update
           .transition()
-          .duration(1000)
+          .duration(750)
+          .attr("opacity", 1)
           .attrTween("d", function (d) {
             var previous = d3.select(this).attr("d");
-            var current = area(d);
+            var current = area1(d);
             return d3.interpolatePath(previous, current);
           });
 
         return rectUpdateTransition;
       },
       function (exit) {
-        return exit.remove();
+        const rectExitTransition = exit
+          .transition()
+          .duration(750)
+          .attr("opacity", 0);
+        return rectExitTransition;
       }
     );
   }
@@ -195,6 +173,12 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
   chart.margin = function (value) {
     if (!arguments.length) return margin;
     margin = value;
+    return chart;
+  };
+
+  chart.DateRange = function (value) {
+    if (!arguments.length) return DateRange;
+    DateRange = value;
     return chart;
   };
 

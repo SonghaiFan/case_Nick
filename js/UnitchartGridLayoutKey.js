@@ -18,6 +18,8 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
       gx = canvas.select("#xAxisGroup"),
       gy = canvas.select("#yAxisGroup");
 
+    gm.selectAll("*").remove();
+
     g2.transition()
       .duration(750)
       .style("opacity", 1)

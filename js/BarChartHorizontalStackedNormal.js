@@ -31,10 +31,10 @@ export default function BarChartHorizontalStackedNormal(
       .end()
       .then(gm.selectAll("*").remove());
 
-    g2.transition()
-      .duration(750)
-      .style("opacity", 1)
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+    g2.style("opacity", 1).attr(
+      "transform",
+      `translate(${margin.left},${margin.top})`
+    );
 
     const data = aqTable
       .groupby("year_month")
@@ -54,7 +54,7 @@ export default function BarChartHorizontalStackedNormal(
     const yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
 
     const paddedExtent = [
-      d3.min(data.map((d) => d3.timeMonth.offset(d.year_month, -1))),
+      d3.min(data.map((d) => d.year_month)),
       d3.max(data.map((d) => d3.timeMonth.offset(d.year_month, 1))),
     ];
 
@@ -116,7 +116,7 @@ export default function BarChartHorizontalStackedNormal(
           .append("rect")
           .attr("fill", (d) => colorScale(d.key))
           .style("mix-blend-mode", "multiply")
-          .attr("x", (d) => xBand(d.year_month) - xBand.bandwidth() / 2)
+          .attr("x", (d) => xBand(d.year_month))
           .attr("y", (d) => yScale(d.value_stackmax_percentage))
           .attr(
             "height",
@@ -131,7 +131,7 @@ export default function BarChartHorizontalStackedNormal(
             .transition()
             .duration(750)
             // .delay((d, i) => keyArray.indexOf(d[groupKey]) * 1)
-            .attr("x", (d) => xBand(d.year_month) - xBand.bandwidth() / 2)
+            .attr("x", (d) => xBand(d.year_month))
             .attr("width", xBand.bandwidth())
             // .transition()
             // .duration(750)
