@@ -1,4 +1,8 @@
-export default function BarChartHorizontal(aqTable, canvas, simulation) {
+export default function BarChartHorizontalStackedNormal(
+  aqTable,
+  canvas,
+  simulation
+) {
   simulation.stop();
   // CANVAS SETUP
   let margin = {
@@ -7,6 +11,8 @@ export default function BarChartHorizontal(aqTable, canvas, simulation) {
     bottom: 100,
     left: 200,
   };
+
+  let groupKey = "year_month";
 
   function chart() {
     const width = canvas.attr("width") - margin.left - margin.right,
@@ -25,42 +31,46 @@ export default function BarChartHorizontal(aqTable, canvas, simulation) {
       .end()
       .then(gm.selectAll("*").remove());
 
-    g3.transition()
+    g2.transition()
       .duration(750)
       .style("opacity", 1)
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const groupKey = "key3";
-
     const data = aqTable
-      .groupby(["key", "key3"])
-      .rollup({ value_sum: (d) => op.sum(d.value) })
-      .orderby(["key", aq.desc("value_sum")])
+      .groupby("year_month")
+      .orderby("year_month", "key")
+      .derive({ value_sum: (d) => op.sum(d.value) })
+      .derive({ value_stackmax: aq.rolling((d) => op.sum(d.value)) })
+      .derive({ value_stackmin: (d) => op.lag(d.value_stackmax, 1, 0) })
+      .derive({
+        value_stackmax_percentage: (d) => d.value_stackmax / d.value_sum,
+      })
+      .derive({
+        value_stackmin_percentage: (d) =>
+          op.lag(d.value_stackmax_percentage, 1, 0),
+      })
       .objects();
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.value_sum)])
-      .range([height, 0])
-      .nice();
+    const yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
 
-    const xScale = d3
+    const paddedExtent = [
+      d3.min(data.map((d) => d3.timeMonth.offset(d.year_month, -1))),
+      d3.max(data.map((d) => d3.timeMonth.offset(d.year_month, 1))),
+    ];
+
+    const xScale = d3.scaleTime().domain(paddedExtent).range([0, width]);
+
+    const xBand = d3
       .scaleBand()
-      .domain(data.map((d) => d[groupKey]))
+      .domain(d3.timeMonth.range(...xScale.domain()))
       .range([0, width])
-      .padding(0.2);
+      .padding(0);
 
     gx.transition()
       .duration(750)
       .style("opacity", 1)
       .attr("transform", `translate(${margin.left},${margin.top + height})`)
-      .call(d3.axisBottom(xScale))
-      .call(function (g) {
-        g.selectAll("text")
-          .style("text-anchor", "start")
-          .attr("transform", "rotate(15)");
-        return g;
-      });
+      .call(d3.axisBottom(xScale));
 
     gy.transition()
       .duration(750)
@@ -96,38 +106,45 @@ export default function BarChartHorizontal(aqTable, canvas, simulation) {
       ])
       .range(d3.range(1, 17).map((v) => d3.interpolateTurbo(v / 16)));
 
-    const rect = g3
+    const rect = g2
       .selectAll("rect")
-      .data(data, (d) => (d[groupKey] ? d[groupKey] : d.name));
+      .data(data, (d) => [d.id, d.key, d.year_month]);
 
     rect.join(
       (enter) =>
         enter
           .append("rect")
-          .attr("fill", (d) => colorScale(d[groupKey]))
+          .attr("fill", (d) => colorScale(d.key))
           .style("mix-blend-mode", "multiply")
-          .attr("y", height)
-          .attr("x", (d) => xScale(d[groupKey]))
-          .attr("width", xScale.bandwidth())
-          .call((enter) =>
-            enter
-              .transition()
-              .duration(750)
-              .attr("y", (d) => yScale(d.value_sum))
-              .attr("height", (d) => height - yScale(d.value_sum))
-          ),
+          .attr("x", (d) => xBand(d.year_month) - xBand.bandwidth() / 2)
+          .attr("y", (d) => yScale(d.value_stackmax_percentage))
+          .attr(
+            "height",
+            (d) =>
+              height -
+              yScale(d.value_stackmax_percentage - d.value_stackmin_percentage)
+          )
+          .attr("width", xBand.bandwidth),
       (update) =>
         update.call((update) =>
           update
             .transition()
             .duration(750)
-            .attr("fill", (d) => colorScale(d[groupKey]))
-            .attr("width", xScale.bandwidth())
-            .attr("x", (d) => xScale(d[groupKey]))
-            .transition()
-            .duration(750)
-            .attr("y", (d) => yScale(d.value_sum))
-            .attr("height", (d) => height - yScale(d.value_sum))
+            // .delay((d, i) => keyArray.indexOf(d[groupKey]) * 1)
+            .attr("x", (d) => xBand(d.year_month) - xBand.bandwidth() / 2)
+            .attr("width", xBand.bandwidth())
+            // .transition()
+            // .duration(750)
+            // .delay((d, i) => i * 1)
+            .attr(
+              "height",
+              (d) =>
+                height -
+                yScale(
+                  d.value_stackmax_percentage - d.value_stackmin_percentage
+                )
+            )
+            .attr("y", (d) => yScale(d.value_stackmax_percentage))
         ),
       (exit) =>
         exit.call((exit) =>
@@ -135,7 +152,7 @@ export default function BarChartHorizontal(aqTable, canvas, simulation) {
             .transition()
             .duration(750)
             .attr("height", 0)
-            .attr("y", height)
+            .attr("y", (d) => height - yScale(d.value_stackmin_percentage))
             .remove()
         )
     );
@@ -144,6 +161,12 @@ export default function BarChartHorizontal(aqTable, canvas, simulation) {
   chart.margin = function (value) {
     if (!arguments.length) return margin;
     margin = value;
+    return chart;
+  };
+
+  chart.groupKey = function (value) {
+    if (!arguments.length) return groupKey;
+    groupKey = value;
     return chart;
   };
 

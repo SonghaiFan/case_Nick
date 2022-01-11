@@ -56,7 +56,7 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
 
     // RENDER
 
-    let groupKey = "key3";
+    let groupKey = "key";
 
     const data2 = aqTable
       .groupby(groupKey)
