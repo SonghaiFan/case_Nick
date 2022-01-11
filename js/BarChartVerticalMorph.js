@@ -180,6 +180,7 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
           const rectUpdateTransition = update
             .transition()
             .duration(750)
+            // .delay((d, i) => d.id * 100 + i * 10)
             .delay(
               (d, i) =>
                 (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 + i * 10

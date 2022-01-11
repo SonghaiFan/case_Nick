@@ -5,6 +5,7 @@ import BarChartHorizontalStacked from "./js/BarChartHorizontalStacked.js";
 import BarChartHorizontalStackedNormal from "./js/BarChartHorizontalStackedNormal.js";
 import BarChartVertical from "./js/BarChartVertical.js";
 import BarChartVerticalMorph from "./js/BarChartVerticalMorph.js";
+import StreamChartCurveStackOffsetSilhouette from "./js/StreamChartCurveStackOffsetSilhouette.js";
 import SankeyChart from "./js/SankeyChart.js";
 import StreamChartStep from "./js/StreamChartStep.js";
 import StreamChartCurve from "./js/StreamChartCurve.js";
@@ -188,7 +189,7 @@ const data_atLeast25groupsIssues = aqTable2
 const handleResize = () => {
   const stepHeight = Math.floor(window.innerHeight * 0.75);
 
-  step.style("height", stepHeight + "px");
+  // step.style("height", stepHeight + "px");
 
   const figureHeight = window.innerHeight;
   const figureMarginTop = (window.innerHeight - figureHeight) / 2;
@@ -530,7 +531,7 @@ const handleStepChange = ({ element, direction, index }) => {
       break;
 
     case 12:
-      StreamChartCurve(
+      StreamChartCurveStackOffsetSilhouette(
         data_atLeast25groupsIssues.filter((d) => d.group_or_issue == "group"),
         canvas,
         simulation
