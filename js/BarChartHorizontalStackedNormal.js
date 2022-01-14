@@ -82,7 +82,7 @@ export default function BarChartHorizontalStackedNormal(
         return g;
       });
 
-    const keyArray = Array.from(new Set(data.map((d) => d[groupKey])));
+    const keyArray = Array.from(new Set(data.map((d) => d.key))).sort();
 
     const colorScale = d3
       .scaleOrdinal()
@@ -115,7 +115,7 @@ export default function BarChartHorizontalStackedNormal(
         enter
           .append("rect")
           .attr("fill", (d) => colorScale(d.key))
-          .style("mix-blend-mode", "multiply")
+          // .style("mix-blend-mode", "multiply")
           .attr("x", (d) => xBand(d.year_month))
           .attr("y", (d) => yScale(d.value_stackmax_percentage))
           .attr(
@@ -130,12 +130,8 @@ export default function BarChartHorizontalStackedNormal(
           update
             .transition()
             .duration(750)
-            // .delay((d, i) => keyArray.indexOf(d[groupKey]) * 1)
-            .attr("x", (d) => xBand(d.year_month))
-            .attr("width", xBand.bandwidth())
-            // .transition()
-            // .duration(750)
-            // .delay((d, i) => i * 1)
+            .delay((d, i) => (keyArray.length - keyArray.indexOf(d.key)) * 50)
+            .attr("y", (d) => yScale(d.value_stackmax_percentage))
             .attr(
               "height",
               (d) =>
@@ -144,7 +140,11 @@ export default function BarChartHorizontalStackedNormal(
                   d.value_stackmax_percentage - d.value_stackmin_percentage
                 )
             )
-            .attr("y", (d) => yScale(d.value_stackmax_percentage))
+            .transition()
+            .duration(750)
+            .attr("x", (d) => xBand(d.year_month))
+            .attr("width", xBand.bandwidth())
+            .transition()
         ),
       (exit) =>
         exit.call((exit) =>

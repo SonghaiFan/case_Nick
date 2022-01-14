@@ -508,18 +508,17 @@ const handleStepChange = ({ element, direction, index }) => {
       break;
 
     case 11:
-      StreamChartCurve(
-        data_atLeast25groupsIssues.filter(
-          aq.escape((d) => d.date > new Date(2021, 0, 1))
-        ),
-        canvas,
-        simulation
-      ).margin({
-        top: 100,
-        right: 100,
-        bottom: 100,
-        left: 100,
-      })();
+      StreamChartCurve(data_atLeast25groupsIssues, canvas, simulation)
+        .margin({
+          top: 100,
+          right: 100,
+          bottom: 100,
+          left: 100,
+        })
+        .DateRange({
+          startDate: new Date(2021, 0, 1),
+          endDate: new Date(2022, 0, 1),
+        })();
       // SankeyChart(data_groupsIssues, canvas, simulation)();
 
       // UnitchartGridLayoutId(data_articleIndentity, canvas, simulation).margin({
@@ -554,7 +553,6 @@ const handleStepChange = ({ element, direction, index }) => {
 };
 
 const initialRender = () => {
-  canvas.append("clipPath").append("rect").attr("id", "clipRect");
   canvas.append("g").attr("id", "figure1Group");
   canvas.append("g").attr("id", "figure2Group");
   canvas.append("g").attr("id", "figure3Group");

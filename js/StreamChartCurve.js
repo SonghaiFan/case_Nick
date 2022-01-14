@@ -10,15 +10,14 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
 
   let DateRange = {
     startDate: new Date(2020, 0, 1),
-    endDate: new Date(2021, 11, 30),
+    endDate: new Date(2022, 0, 1),
   };
 
   function chart() {
     const width = canvas.attr("width") - margin.left - margin.right,
       height = canvas.attr("height") - margin.top - margin.bottom;
 
-    const cp = canvas.select("#clipRect"),
-      g1 = canvas.select("#figure1Group"),
+    const g1 = canvas.select("#figure1Group"),
       g2 = canvas.select("#figure2Group"),
       g3 = canvas.select("#figure3Group"),
       gm = canvas.select("#morphGroup"),
@@ -39,11 +38,27 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
     const data0 = aqTable.objects();
     const keyArray = Array.from(new Set(data0.map((d) => d.key))).sort();
 
-    const data = aqTable
+    const dtg = aqTable
+      .groupby("year_month")
+      .pivot("key", { value: (d) => (op.sum(d.value) ? op.sum(d.value) : 0) })
+      .orderby("year_month");
+
+    const dtg1 = aqTable
       .groupby("year_month")
       .pivot("key", { value: (d) => (op.sum(d.value) ? op.sum(d.value) : 0) })
       .orderby("year_month")
-      .objects();
+      .slice(-1)
+      .derive({
+        year_month: aq.escape((d) => d3.timeMonth.offset(d.year_month, 1)),
+      });
+
+    const data = dtg.concat(dtg1).orderby("year_month").objects();
+
+    // const data = aqTable
+    //   .groupby("year_month")
+    //   .pivot("key", { value: (d) => (op.sum(d.value) ? op.sum(d.value) : 0) })
+    //   .orderby("year_month")
+    //   .objects();
 
     const stack = d3.stack().keys(keyArray).offset(d3.stackOffsetExpand);
 
@@ -57,10 +72,18 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
       ])
       .range([height, 0]);
 
+    // const xScale = d3
+    //   .scaleTime()
+    //   .domain(d3.extent(data, (d) => d.year_month))
+    //   .range([0, width]);
+
     const xScale = d3
       .scaleTime()
-      .domain(d3.extent(data, (d) => d.year_month))
+      .domain([DateRange.startDate, DateRange.endDate])
       .range([0, width]);
+    // .clamp(true);
+
+    const xScaleLength = d3.timeMonth.range(...xScale.domain()).length;
 
     const area = d3
       .area()
@@ -78,7 +101,11 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
 
     const area1 = d3
       .area()
-      .x((d) => xScale(d.data.year_month))
+      .x((d) =>
+        (xScale(d.data.year_month) == 0) | (xScale(d.data.year_month) == width)
+          ? xScale(d.data.year_month)
+          : xScale(d.data.year_month) + width / xScaleLength / 2
+      )
       .y0((d) => yScale(d[0]))
       .y1((d) => 0)
       .curve(d3.curveBumpX);
@@ -121,7 +148,9 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
       ])
       .range(d3.range(1, 17).map((v) => d3.interpolateTurbo(v / 16)));
 
-    cp.attr("x", margin.left)
+    g3.append("clipPath")
+      .append("rect")
+      .attr("x", margin.left)
       .attr("y", margin.top)
       .attr("height", height)
       .attr("width", width);

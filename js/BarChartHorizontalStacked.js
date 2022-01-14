@@ -108,7 +108,7 @@ export default function BarChartHorizontalStacked(aqTable, canvas, simulation) {
           enter
             .append("rect")
             .attr("fill", (d) => colorScale(d[groupKey]))
-            .style("mix-blend-mode", "multiply")
+            // .style("mix-blend-mode", "multiply")
             .attr("x", (d) => xScale(d[groupKey]))
             .attr("width", xScale.bandwidth())
             .attr("y", (d) => yScale(d.value_stackmax))
@@ -123,16 +123,16 @@ export default function BarChartHorizontalStacked(aqTable, canvas, simulation) {
               .duration(750)
               .delay((d, i) => keyArray.indexOf(d[groupKey]) * 10)
               .attr("fill", (d) => colorScale(d[groupKey]))
-              .attr("width", xScale.bandwidth())
               .attr("y", (d) => yScale(d.value_stackmax))
-              .transition()
-              .duration(750)
-              .delay((d, i) => i * 1)
-              .attr("x", (d) => xScale(d[groupKey]))
               .attr(
                 "height",
                 (d) => height - yScale(d.value_stackmax - d.value_stackmin)
               )
+              .transition()
+              .duration(750)
+              .delay((d, i) => i * 1)
+              .attr("x", (d) => xScale(d[groupKey]))
+              .attr("width", xScale.bandwidth())
           ),
         (exit) =>
           exit.call((exit) =>
