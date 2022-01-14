@@ -30,7 +30,7 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
       .style("opacity", 1)
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const groupKey = "key3";
+    const groupKey = "key";
 
     const data3 = aqTable
       .groupby(groupKey)

@@ -30,12 +30,12 @@ export default function BarChartHorizontal(aqTable, canvas, simulation) {
       .style("opacity", 1)
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const groupKey = "key3";
+    const groupKey = "key";
 
     const data3 = aqTable
-      .groupby(["key", "key3"])
+      .groupby(["group_or_issue", "key"])
       .rollup({ value_sum: (d) => op.sum(d.value) })
-      .orderby(["key", aq.desc("value_sum")])
+      .orderby(["group_or_issue", aq.desc("value_sum")])
       .objects();
 
     const yScale3 = d3
@@ -113,19 +113,13 @@ export default function BarChartHorizontal(aqTable, canvas, simulation) {
       (enter) =>
         enter
           .append("rect")
-          // .attr("id", (d) => d[groupKey])
           .attr("fill", (d) => colorScale(d[groupKey]))
           .style("mix-blend-mode", "multiply")
           .attr("y", height)
           .attr("x", (d) => xScale3(d[groupKey]))
           .attr("width", xScale3.bandwidth())
-          .call((enter) =>
-            enter
-              .transition()
-              .duration(750)
-              .attr("y", (d) => yScale3(d.value_sum))
-              .attr("height", (d) => height - yScale3(d.value_sum))
-          ),
+          .attr("y", (d) => yScale3(d.value_sum))
+          .attr("height", (d) => height - yScale3(d.value_sum)),
       (update) =>
         update.call((update) =>
           update

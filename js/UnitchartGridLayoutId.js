@@ -20,11 +20,7 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
 
     const tooltip = d3.select("#tooltipContainer");
 
-    gm.transition()
-      .duration(750)
-      .attr("opacity", 0)
-      .end()
-      .then(gm.selectAll("*").remove());
+    gm.selectAll("*").remove();
 
     g1.transition()
       .duration(750)

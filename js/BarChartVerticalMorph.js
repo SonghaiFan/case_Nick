@@ -29,7 +29,7 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
       .style("opacity", 0.2)
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const groupKey = "key3";
+    const groupKey = "key";
 
     const data = aqTable
       .groupby(groupKey)
@@ -180,15 +180,21 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
           const rectUpdateTransition = update
             .transition()
             .duration(750)
-            .delay((d, i) =>
-              keyArray.length - keyArray.indexOf(d[groupKey]) > 3
-                ? 5000 +
-                  (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 +
-                  i * 10
-                : (keyArray.length - keyArray.indexOf(d[groupKey])) * 750 +
-                  i * 10
+            // .delay((d, i) => d.id * 100 + i * 10)
+            .delay(
+              (d, i) =>
+                (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 + i * 10
             )
+            // .delay((d, i) =>
+            //   keyArray.length - keyArray.indexOf(d[groupKey]) > 3
+            //     ? 5000 +
+            //       (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 +
+            //       i * 10
+            //     : (keyArray.length - keyArray.indexOf(d[groupKey])) * 750 +
+            //       i * 10
+            // )
             .attr("y", (d) => yScale(d[groupKey]))
+            .transition()
             .attr("x", (d) => xScale(d.value_stackmin) + margin.left - 100)
             .attr("height", yScale.bandwidth())
             .attr(

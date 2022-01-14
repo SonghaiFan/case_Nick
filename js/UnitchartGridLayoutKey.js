@@ -18,6 +18,8 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
       gx = canvas.select("#xAxisGroup"),
       gy = canvas.select("#yAxisGroup");
 
+    gm.selectAll("*").remove();
+
     g2.transition()
       .duration(750)
       .style("opacity", 1)
@@ -56,7 +58,7 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
 
     // RENDER
 
-    let groupKey = "key3";
+    let groupKey = "key";
 
     const data2 = aqTable
       .groupby(groupKey)
