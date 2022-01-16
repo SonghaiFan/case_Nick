@@ -215,10 +215,6 @@ const handleStepChange = ({ element, direction, index }) => {
     containerWidth = containerRect.width,
     containerHeight = containerRect.height;
 
-  // add color to current step only
-  step.classed("is-active", (_, i) => i === index);
-  console.log(element, direction, index);
-
   canvas
     .select("#morphGroup")
     .selectAll("rect")
@@ -226,6 +222,10 @@ const handleStepChange = ({ element, direction, index }) => {
     .attr("opacity", 0)
     .end()
     .then(canvas.select("#morphGroup").selectAll("*").remove());
+
+  // add color to current step only
+  step.classed("is-active", (_, i) => i === index);
+  console.log(element, direction, index);
 
   switch (index) {
     case 0:
