@@ -405,7 +405,7 @@ const handleStepChange = ({ element, direction, index }) => {
       break;
 
     case 8:
-      // canvas.select("#figure3Group").selectAll("*").remove();
+      canvas.select("#figure3Group").selectAll("*").remove();
 
       BarChartHorizontalStackedNormal(
         data_atLeast25groupsIssues,

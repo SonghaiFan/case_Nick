@@ -80,8 +80,8 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
     const xScale = d3
       .scaleTime()
       .domain([DateRange.startDate, DateRange.endDate])
-      .range([0, width]);
-    // .clamp(true);
+      .range([0, width])
+      .clamp(true);
 
     const xScaleLength = d3.timeMonth.range(...xScale.domain()).length;
 
@@ -192,7 +192,7 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
       function (exit) {
         const rectExitTransition = exit
           .transition()
-          .duration(750)
+          .duration(1200)
           .attr("opacity", 0);
         return rectExitTransition;
       }

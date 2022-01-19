@@ -130,7 +130,7 @@ export default function BarChartHorizontalStackedNormal(
           update
             .transition()
             .duration(750)
-            .delay((d, i) => (keyArray.length - keyArray.indexOf(d.key)) * 50)
+            // .delay((d, i) => (keyArray.length - keyArray.indexOf(d.key)) * 50)
             .attr("y", (d) => yScale(d.value_stackmax_percentage))
             .attr(
               "height",
@@ -140,8 +140,8 @@ export default function BarChartHorizontalStackedNormal(
                   d.value_stackmax_percentage - d.value_stackmin_percentage
                 )
             )
-            .transition()
-            .duration(750)
+            // .transition()
+            // .duration(750)
             .attr("x", (d) => xBand(d.year_month))
             .attr("width", xBand.bandwidth())
             .transition()
