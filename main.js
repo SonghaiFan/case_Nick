@@ -496,11 +496,15 @@ function handleStepChange({ element, direction, index }) {
         bottom: 100,
         left: 100,
       })();
+      simulation.stop();
+      UnitchartGridLayoutId(
+        data_atLeast25articleIdentity,
+        canvas2,
+        simulation
+      )();
       break;
 
     case 13:
-      simulation.stop();
-      UnitchartGridLayoutId(data_articleIndentity, canvas2, simulation)();
       UnitChartForceLayout(
         data_atLeast25articleIdentity,
         canvas2,
@@ -510,16 +514,7 @@ function handleStepChange({ element, direction, index }) {
       break;
 
     case 14:
-      UnitChartForceSplit(
-        data_atLeast25articleIdentity,
-        canvas2,
-        simulation
-      ).margin({
-        top: 100,
-        right: 100,
-        bottom: 100,
-        left: 200,
-      })();
+      UnitChartForceSplit(data_atLeast25articleIdentity, canvas2, simulation)();
 
       canvas2.select("#linksGroup").selectAll("*").remove();
       canvas2.select("#nodesGroup").selectAll("*").remove();

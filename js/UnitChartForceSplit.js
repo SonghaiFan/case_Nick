@@ -19,13 +19,13 @@ export default function UnitChartForceSplit(aqTable, canvas, simulation) {
       .style("opacity", 1)
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    ga.transition()
-      .duration(500)
-      .style("opacity", 1)
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+    ga.style("opacity", 1).attr(
+      "transform",
+      `translate(${margin.left},${margin.top})`
+    );
 
     // DATA MANIPULATE
-    const size = (d) => 25;
+    const size = (d) => 20;
 
     let publiserList = [...new Set(aqTable.array("publisher"))];
 
