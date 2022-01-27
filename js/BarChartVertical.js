@@ -12,18 +12,10 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
     const width = canvas.attr("width") - margin.left - margin.right,
       height = canvas.attr("height") - margin.top - margin.bottom;
 
-    const g1 = canvas.select("#figure1Group"),
-      g2 = canvas.select("#figure2Group"),
-      g3 = canvas.select("#figure3Group"),
+    const g3 = canvas.select("#figure3Group"),
       gm = canvas.select("#morphGroup"),
       gx = canvas.select("#xAxisGroup"),
       gy = canvas.select("#yAxisGroup");
-
-    gm.transition()
-      .duration(750)
-      .attr("opacity", 0)
-      .end()
-      .then(gm.selectAll("*").remove());
 
     g3.transition()
       .duration(750)

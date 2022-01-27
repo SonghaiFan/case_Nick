@@ -1,24 +1,27 @@
 import UnitchartGridLayoutId from "./js/UnitchartGridLayoutId.js";
 import UnitchartGridLayoutKey from "./js/UnitchartGridLayoutKey.js";
+import BarChartVerticalMorph from "./js/BarChartVerticalMorph.js";
+import BarChartVertical from "./js/BarChartVertical.js";
 import BarChartHorizontal from "./js/BarChartHorizontal.js";
+import UnitChartForceLayout from "./js/UnitChartForceLayout.js";
 import BarChartHorizontalStacked from "./js/BarChartHorizontalStacked.js";
 import BarChartHorizontalStackedNormal from "./js/BarChartHorizontalStackedNormal.js";
-import BarChartVertical from "./js/BarChartVertical.js";
-import BarChartVerticalMorph from "./js/BarChartVerticalMorph.js";
-import StreamChartCurveStackOffsetSilhouette from "./js/StreamChartCurveStackOffsetSilhouette.js";
-import SankeyChart from "./js/SankeyChart.js";
 import StreamChartStep from "./js/StreamChartStep.js";
 import StreamChartCurve from "./js/StreamChartCurve.js";
-import UnitChartForceLayout from "./js/UnitChartForceLayout.js";
+import StreamChartCurveStackOffsetSilhouette from "./js/StreamChartCurveStackOffsetSilhouette.js";
+import UnitChartForceSplit from "./js/UnitChartForceSplit.js";
+import SankeyChart from "./js/SankeyChart.js";
+import UnitchartGridLayout from "./js/UnitchartGridLayoutId.js";
 
-const main = d3.select("main");
-const scrolly = main.select("#scrolly");
-const figure = scrolly.select("figure");
-const article = scrolly.select("article");
-const canvas = figure.append("svg");
-const step = article.selectAll(".step");
+const figures = d3.selectAll("figure");
+const steps = d3.selectAll(".step");
+const navbar = d3.select("#navbar");
 const scroller = scrollama();
 const simulation = d3.forceSimulation();
+const figure1 = d3.select("#figure1");
+const figure2 = d3.select("#figure2");
+const canvas1 = figure1.append("svg");
+const canvas2 = figure2.append("svg");
 
 const aqTable = await aq.loadCSV("./data/data_raw.csv");
 
@@ -186,215 +189,238 @@ const data_atLeast25groupsIssues = aqTable2
     }),
   });
 
-const handleResize = () => {
-  const stepHeight = Math.floor(window.innerHeight * 0.75);
-
-  // step.style("height", stepHeight + "px");
+function handleResize() {
+  const stepH = Math.floor(window.innerHeight * 0.75);
+  steps.style("height", stepH + "px");
 
   const figureHeight = window.innerHeight;
   const figureMarginTop = (window.innerHeight - figureHeight) / 2;
 
-  figure
+  figures
     .style("height", figureHeight + "px")
     .style("top", figureMarginTop + "px");
 
   scroller.resize();
 
-  const containerRect = figure.node().getBoundingClientRect(),
-    containerWidth = containerRect.width,
-    containerHeight = containerRect.height;
+  const containerRect1 = figure1.node().getBoundingClientRect();
+  const containerRect2 = figure2.node().getBoundingClientRect();
 
-  canvas.attr("width", containerWidth).attr("height", containerHeight);
-};
+  canvas1
+    .attr("width", containerRect1.width)
+    .attr("height", containerRect1.height);
+  canvas2
+    .attr("width", containerRect2.width)
+    .attr("height", containerRect2.height);
+}
 
 // scrollama event handlers
-const handleStepChange = ({ element, direction, index }) => {
-  // response = { element, direction, index }
+function handleStepChange({ element, direction, index }) {
+  const currentStepId = element.getAttribute("id");
 
-  const containerRect = figure.node().getBoundingClientRect(),
-    containerWidth = containerRect.width,
-    containerHeight = containerRect.height;
+  // globalStepHistory.push(currentStepId);
+  // console.log(globalStepHistory);
+  // const previousElementId = globalStepHistory.shift();
 
-  canvas
+  const nexStep = element.nextElementSibling;
+  const nextSection = element.parentNode.parentNode.nextElementSibling;
+
+  const preStep = element.previousElementSibling;
+  const preSetion = element.parentNode.parentNode.previousElementSibling;
+  const preChapterLastStep =
+    preSetion.previousElementSibling.firstElementChild.lastElementChild;
+
+  const nextElementId = nexStep
+    ? nexStep.getAttribute("id")
+    : nextSection.getAttribute("id");
+
+  const previousElementId = preStep
+    ? preStep.getAttribute("id")
+    : preChapterLastStep
+    ? preChapterLastStep.getAttribute("id")
+    : "top";
+
+  navbar.select("#next").attr("href", "#" + nextElementId);
+  navbar.select("#previous").attr("href", "#" + previousElementId);
+
+  const containerRect1 = figure1.node().getBoundingClientRect(),
+    containerWidth1 = containerRect1.width,
+    containerHeight1 = containerRect1.height;
+
+  canvas1
     .select("#morphGroup")
     .selectAll("rect")
     .transition()
     .attr("opacity", 0)
     .end()
-    .then(canvas.select("#morphGroup").selectAll("*").remove());
+    .then(canvas1.select("#morphGroup").selectAll("*").remove());
 
-  // add color to current step only
-  step.classed("is-active", (_, i) => i === index);
-  console.log(element, direction, index);
+  // console.log(element);
+  steps.classed("is-active", (_, i) => i === index);
 
   switch (index) {
     case 0:
-      // g1
       UnitchartGridLayoutId(
         data_articleIndentity.filter((d) => d.id == 1),
-        canvas,
+        canvas1,
         simulation
-      )();
-      // g2
+      ).margin({
+        top: 100,
+        right: containerWidth1 / 3,
+        bottom: 100,
+        left: containerWidth1 / 3,
+      })();
       UnitchartGridLayoutKey(
         data_groupsIssues.filter((d) => d.id == 1),
-        canvas,
+        canvas1,
         simulation
-      )();
+      ).margin({
+        top: 100,
+        right: containerWidth1 / 3,
+        bottom: 100,
+        left: containerWidth1 / 3,
+      })();
       break;
 
     case 1:
-      canvas
+      canvas1
         .select("#figure3Group")
         .transition()
         .duration(500)
         .style("opacity", 0);
-      canvas
+      canvas1
         .select("#xAxisGroup")
         .transition()
         .duration(500)
         .style("opacity", 0);
-      canvas
+      canvas1
         .select("#yAxisGroup")
         .transition()
         .duration(500)
         .style("opacity", 0);
 
-      UnitchartGridLayoutId(
-        data_articleIndentity.filter((d) => d.id < 5),
-        canvas,
-        simulation
-      )();
-      UnitchartGridLayoutKey(
-        data_groupsIssues.filter((d) => d.id < 5),
-        canvas,
-        simulation
-      )();
+      UnitchartGridLayoutId(data_articleIndentity, canvas1, simulation).margin({
+        top: 100,
+        right: containerWidth1 / 4,
+        bottom: 100,
+        left: containerWidth1 / 4,
+      })();
+      UnitchartGridLayoutKey(data_groupsIssues, canvas1, simulation).margin({
+        top: 100,
+        right: containerWidth1 / 4,
+        bottom: 100,
+        left: containerWidth1 / 4,
+      })();
       break;
 
     case 2:
-      UnitchartGridLayoutId(
-        data_articleIndentity.filter((d) => d.id < 50),
-        canvas,
-        simulation
-      ).margin({
+      UnitchartGridLayoutId(data_articleIndentity, canvas1, simulation).margin({
         top: 100,
-        right: containerWidth / 2,
+        right: containerWidth1 / 2,
         bottom: 100,
         left: 100,
       })();
-      UnitchartGridLayoutKey(
-        data_groupsIssues.filter((d) => d.id < 50),
-        canvas,
-        simulation
-      ).margin({
+      UnitchartGridLayoutKey(data_groupsIssues, canvas1, simulation).margin({
         top: 100,
-        right: containerWidth / 2,
+        right: containerWidth1 / 2,
         bottom: 100,
         left: 100,
       })();
-
-      BarChartVerticalMorph(
-        data_groupsIssues.filter((d) => d.id < 50),
-        canvas,
-        simulation
-      ).margin({
+      BarChartVerticalMorph(data_groupsIssues, canvas1, simulation).margin({
         top: 100,
         right: 100,
         bottom: 100,
-        left: containerWidth / 2,
+        left: containerWidth1 / 2,
       })();
-
       break;
 
     case 3:
-      UnitchartGridLayoutId(data_articleIndentity, canvas, simulation).margin({
+      UnitchartGridLayoutId(data_articleIndentity, canvas1, simulation).margin({
         top: 100,
-        right: containerWidth / 2,
+        right: containerWidth1 / 2,
         bottom: 100,
         left: 100,
       })();
-      UnitchartGridLayoutKey(data_groupsIssues, canvas, simulation).margin({
+      UnitchartGridLayoutKey(data_groupsIssues, canvas1, simulation).margin({
         top: 100,
-        right: containerWidth / 2,
+        right: containerWidth1 / 2,
         bottom: 100,
         left: 100,
       })();
-
-      BarChartVertical(data_groupsIssues, canvas, simulation).margin({
+      BarChartVertical(data_groupsIssues, canvas1, simulation).margin({
         top: 100,
         right: 100,
         bottom: 100,
-        left: containerWidth / 2,
+        left: containerWidth1 / 2,
       })();
       break;
 
     case 4:
       UnitchartGridLayoutId(
         data_atLeast25articleIdentity,
-        canvas,
+        canvas1,
         simulation
       ).margin({
         top: 100,
-        right: containerWidth / 2,
+        right: containerWidth1 / 2,
         bottom: 100,
         left: 100,
       })();
       UnitchartGridLayoutKey(
         data_atLeast25groupsIssues,
-        canvas,
+        canvas1,
         simulation
       ).margin({
         top: 100,
-        right: containerWidth / 2,
+        right: containerWidth1 / 2,
         bottom: 100,
         left: 100,
       })();
-
-      BarChartVertical(data_atLeast25groupsIssues, canvas, simulation).margin({
+      BarChartVertical(data_atLeast25groupsIssues, canvas1, simulation).margin({
         top: 100,
         right: 100,
         bottom: 100,
-        left: containerWidth / 2,
+        left: containerWidth1 / 2,
       })();
       break;
 
     case 5:
-      BarChartHorizontal(data_atLeast25groupsIssues, canvas, simulation).margin(
-        {
-          top: 100,
-          right: 100,
-          bottom: 100,
-          left: 100,
-        }
-      )();
-      canvas.select("#figure2Group").selectAll("*").remove();
+      BarChartHorizontal(
+        data_atLeast25groupsIssues,
+        canvas1,
+        simulation
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 200,
+        left: 100,
+      })();
+
+      canvas1.select("#figure2Group").selectAll("*").remove();
 
       UnitChartForceLayout(
         data_atLeast25articleIdentity.sample(0),
-        canvas,
+        canvas1,
         simulation
       )();
-
       break;
 
     case 6:
       BarChartHorizontalStacked(
         data_atLeast25groupsIssues,
-        canvas,
+        canvas1,
         simulation
       ).margin({
         top: 100,
         right: 100,
-        bottom: 100,
+        bottom: 200,
         left: 100,
       })();
 
-      canvas.select("#figure3Group").selectAll("*").remove();
+      canvas1.select("#figure3Group").selectAll("*").remove();
       break;
 
     case 7:
-      BarChartHorizontalStacked(data_atLeast25groupsIssues, canvas, simulation)
+      BarChartHorizontalStacked(data_atLeast25groupsIssues, canvas1, simulation)
         .margin({
           top: 100,
           right: 100,
@@ -405,11 +431,11 @@ const handleStepChange = ({ element, direction, index }) => {
       break;
 
     case 8:
-      canvas.select("#figure3Group").selectAll("*").remove();
+      canvas1.select("#figure3Group").selectAll("*").remove();
 
       BarChartHorizontalStackedNormal(
         data_atLeast25groupsIssues,
-        canvas,
+        canvas1,
         simulation
       ).margin({
         top: 100,
@@ -417,98 +443,36 @@ const handleStepChange = ({ element, direction, index }) => {
         bottom: 100,
         left: 100,
       })();
-
-      // SankeyChart(
-      //   data_atLeast25groupsIssues.filter((d) => d.id < 6),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: 100,
-      //   bottom: 100,
-      //   left: containerWidth / 2,
-      // })();
-
-      // UnitChartForceLayout(
-      //   data_atLeast25articleIdentity.filter((d) => d.id < 6),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 200,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
       break;
 
     case 9:
-      canvas
+      canvas1
         .select("#figure2Group")
         .transition()
         .duration(750)
         .style("opacity", 0)
         .end()
-        .then(canvas.select("#figure2Group").selectAll("*").remove());
+        .then(canvas1.select("#figure2Group").selectAll("*").remove());
 
-      StreamChartStep(data_atLeast25groupsIssues, canvas, simulation).margin({
+      StreamChartStep(data_atLeast25groupsIssues, canvas1, simulation).margin({
         top: 100,
         right: 100,
         bottom: 100,
         left: 100,
       })();
-
-      // SankeyChart(
-      //   data_atLeast25groupsIssues.filter((d) => d.id < 10),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: 100,
-      //   bottom: 100,
-      //   left: containerWidth / 2,
-      // })();
-
-      // UnitChartForceLayout(
-      //   data_atLeast25articleIdentity.filter((d) => d.id < 10),
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
       break;
 
     case 10:
-      StreamChartCurve(data_atLeast25groupsIssues, canvas, simulation).margin({
+      StreamChartCurve(data_atLeast25groupsIssues, canvas1, simulation).margin({
         top: 100,
         right: 100,
         bottom: 100,
         left: 100,
       })();
-      // simulation.stop();
-      // SankeyChart(data_atLeast25groupsIssues, canvas, simulation).margin({
-      //   top: 100,
-      //   right: 100,
-      //   bottom: 100,
-      //   left: containerWidth / 2,
-      // })();
-
-      // UnitchartGridLayoutId(
-      //   data_atLeast25articleIdentity,
-      //   canvas,
-      //   simulation
-      // ).margin({
-      //   top: 100,
-      //   right: containerWidth / 2,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
       break;
 
     case 11:
-      StreamChartCurve(data_atLeast25groupsIssues, canvas, simulation)
+      StreamChartCurve(data_atLeast25groupsIssues, canvas1, simulation)
         .margin({
           top: 100,
           right: 100,
@@ -519,20 +483,12 @@ const handleStepChange = ({ element, direction, index }) => {
           startDate: new Date(2021, 0, 1),
           endDate: new Date(2022, 0, 1),
         })();
-      // SankeyChart(data_groupsIssues, canvas, simulation)();
-
-      // UnitchartGridLayoutId(data_articleIndentity, canvas, simulation).margin({
-      //   top: 100,
-      //   right: 1050,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
       break;
 
     case 12:
       StreamChartCurveStackOffsetSilhouette(
         data_atLeast25groupsIssues.filter((d) => d.group_or_issue == "group"),
-        canvas,
+        canvas1,
         simulation
       ).margin({
         top: 100,
@@ -540,40 +496,190 @@ const handleStepChange = ({ element, direction, index }) => {
         bottom: 100,
         left: 100,
       })();
-      // SankeyChart(data_groupsIssues, canvas, simulation)();
+      break;
 
-      // UnitchartGridLayoutId(data_articleIndentity, canvas, simulation).margin({
-      //   top: 100,
-      //   right: 1050,
-      //   bottom: 100,
-      //   left: 100,
-      // })();
+    case 13:
+      simulation.stop();
+      UnitchartGridLayoutId(data_articleIndentity, canvas2, simulation)();
+      UnitChartForceLayout(
+        data_atLeast25articleIdentity,
+        canvas2,
+        simulation
+      )();
+      canvas2.select("#anotationGroup").selectAll("*").remove();
+      break;
+
+    case 14:
+      UnitChartForceSplit(
+        data_atLeast25articleIdentity,
+        canvas2,
+        simulation
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: 200,
+      })();
+
+      canvas2.select("#linksGroup").selectAll("*").remove();
+      canvas2.select("#nodesGroup").selectAll("*").remove();
+      break;
+
+    case 15:
+      canvas2.select("#anotationGroup").selectAll("*").remove();
+      SankeyChart(
+        data_atLeast25groupsIssues.filter((d) => d.id == 1),
+        canvas2,
+        simulation
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: containerWidth1 / 2,
+      })();
+
+      UnitChartForceLayout(
+        data_atLeast25articleIdentity.filter((d) => d.id == 1),
+        canvas2,
+        simulation
+      )
+        .margin({
+          top: 200,
+          right: containerWidth1 / 2,
+          bottom: 100,
+          left: 100,
+        })
+        .size(50)();
+      break;
+
+    case 16:
+      SankeyChart(
+        data_atLeast25groupsIssues.filter((d) => d.id < 3),
+        canvas2,
+        simulation
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: containerWidth1 / 2,
+      })();
+
+      UnitChartForceLayout(
+        data_atLeast25articleIdentity.filter((d) => d.id < 3),
+        canvas2,
+        simulation
+      )
+        .margin({
+          top: 200,
+          right: containerWidth1 / 2,
+          bottom: 100,
+          left: 100,
+        })
+        .size(50)();
+      break;
+
+    case 17:
+      SankeyChart(
+        data_atLeast25groupsIssues.filter((d) => d.id < 4),
+        canvas2,
+        simulation
+      ).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: containerWidth1 / 2,
+      })();
+
+      UnitChartForceLayout(
+        data_atLeast25articleIdentity.filter((d) => d.id < 4),
+        canvas2,
+        simulation
+      )
+        .margin({
+          top: 200,
+          right: containerWidth1 / 2,
+          bottom: 100,
+          left: 100,
+        })
+        .size(50)();
+      break;
+
+    case 18:
+      SankeyChart(data_atLeast25groupsIssues, canvas2, simulation).margin({
+        top: 100,
+        right: 200,
+        bottom: 100,
+        left: containerWidth1 / 1.95,
+      })();
+      simulation.stop();
+
+      UnitchartGridLayoutId(
+        data_atLeast25articleIdentity,
+        canvas2,
+        simulation
+      ).margin({
+        top: 100,
+        right: containerWidth1 / 1.95,
+        bottom: 100,
+        left: 100,
+      })();
+      break;
+
+    case 19:
+      SankeyChart(data_atLeast25groupsIssues, canvas2, simulation).margin({
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: 100,
+      })();
+
+      UnitChartForceLayout(
+        data_atLeast25articleIdentity.sample(0),
+        canvas2,
+        simulation
+      )();
+      break;
+
+    case 20:
       break;
   }
-};
+}
 
 const initialRender = () => {
-  canvas.append("g").attr("id", "figure1Group");
-  canvas.append("g").attr("id", "figure2Group");
-  canvas.append("g").attr("id", "figure3Group");
-  canvas.append("g").attr("id", "xAxisGroup");
-  canvas.append("g").attr("id", "yAxisGroup");
-  canvas.append("g").attr("id", "morphGroup");
-  canvas.append("g").attr("id", "anotationGroup");
-  canvas.append("g").attr("id", "linksGroup");
-  canvas.append("g").attr("id", "nodesGroup");
+  canvas1.append("g").attr("id", "figure1Group");
+  canvas1.append("g").attr("id", "figure2Group");
+  canvas1.append("g").attr("id", "figure3Group");
+  canvas1.append("g").attr("id", "figure4Group");
+  canvas1.append("g").attr("id", "xAxisGroup");
+  canvas1.append("g").attr("id", "yAxisGroup");
+  canvas1.append("g").attr("id", "morphGroup");
+  canvas1.append("g").attr("id", "anotationGroup");
+  canvas1.append("g").attr("id", "linksGroup");
+  canvas1.append("g").attr("id", "nodesGroup");
+  canvas2.append("g").attr("id", "figure1Group");
+  canvas2.append("g").attr("id", "figure2Group");
+  canvas2.append("g").attr("id", "figure3Group");
+  canvas2.append("g").attr("id", "figure4Group");
+  canvas2.append("g").attr("id", "xAxisGroup");
+  canvas2.append("g").attr("id", "yAxisGroup");
+  canvas2.append("g").attr("id", "morphGroup");
+  canvas2.append("g").attr("id", "anotationGroup");
+  canvas2.append("g").attr("id", "linksGroup");
+  canvas2.append("g").attr("id", "nodesGroup");
 };
 
-const init = () => {
+function init() {
   handleResize();
   initialRender();
   scroller
     .setup({
-      step: "#scrolly article .step",
-      offset: 0.4,
+      step: ".step",
+      offset: 0.7,
       debug: false,
     })
     .onStepEnter(handleStepChange);
-};
+}
 
 window.onload = init();
+
+window.addEventListener("resize", handleResize);

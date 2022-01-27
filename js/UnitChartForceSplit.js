@@ -1,4 +1,4 @@
-export default function UnitChartForceLayout(aqTable, canvas, simulation) {
+export default function UnitChartForceSplit(aqTable, canvas, simulation) {
   // CANVAS SETUP
   let margin = {
     top: 100,
@@ -7,20 +7,27 @@ export default function UnitChartForceLayout(aqTable, canvas, simulation) {
     left: 100,
   };
 
-  let size = 25;
-
   function chart() {
     const width = canvas.attr("width") - margin.left - margin.right,
       height = canvas.attr("height") - margin.top - margin.bottom;
 
-    const g1 = canvas.select("#figure1Group");
+    const g1 = canvas.select("#figure1Group"),
+      ga = canvas.select("#anotationGroup");
 
     g1.transition()
       .duration(500)
       .style("opacity", 1)
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    ga.transition()
+      .duration(500)
+      .style("opacity", 1)
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
     // DATA MANIPULATE
+    const size = (d) => 25;
+
+    let publiserList = [...new Set(aqTable.array("publisher"))];
 
     let data = aqTable.objects();
 
@@ -29,15 +36,31 @@ export default function UnitChartForceLayout(aqTable, canvas, simulation) {
       d.y = +d3.select("#rect" + d.id).attr("y");
     });
 
+    const centerScale = d3
+      .scalePoint()
+      .domain(data.map((d) => d.publisher))
+      .range([0, width])
+      .padding(0.2);
+
     const rect = g1.selectAll("rect").data(data, (d) => d.id);
 
     simulation
       .nodes(data, (d) => d.id)
-      .force("collide", d3.forceCollide().radius(size * 0.8))
-      .force("x", d3.forceX(width / 2).strength(0.2))
+      .force(
+        "collide",
+        d3.forceCollide().radius((d) => size(d) * 0.8)
+      )
+      .force("x", d3.forceX((d) => centerScale(d.publisher)).strength(0.3))
       .force("y", d3.forceY(height / 2).strength(0.2))
-      .alpha(0.2)
+      .alpha(0.4)
       .stop();
+
+    ga.selectAll("text")
+      .data(publiserList)
+      .join("text")
+      .attr("x", (d) => centerScale(d))
+      .style("fill", "white")
+      .text((d) => d);
 
     rect.join(
       (enter) =>
@@ -51,8 +74,8 @@ export default function UnitChartForceLayout(aqTable, canvas, simulation) {
               .attr("opacity", 1)
               .attr("x", (d) => d.x)
               .attr("y", (d) => d.y)
-              .attr("width", size)
-              .attr("height", size)
+              .attr("width", (d) => size(d))
+              .attr("height", (d) => size(d))
           ),
       (update) =>
         update.call((update) =>
@@ -60,8 +83,8 @@ export default function UnitChartForceLayout(aqTable, canvas, simulation) {
             .transition()
             .duration(500)
             .style("opacity", 1)
-            .attr("width", size)
-            .attr("height", size)
+            .attr("width", (d) => size(d))
+            .attr("height", (d) => size(d))
         ),
       (exit) =>
         exit.call((exit) =>
@@ -84,12 +107,6 @@ export default function UnitChartForceLayout(aqTable, canvas, simulation) {
   chart.margin = function (value) {
     if (!arguments.length) return margin;
     margin = value;
-    return chart;
-  };
-
-  chart.size = function (value) {
-    if (!arguments.length) return size;
-    size = value;
     return chart;
   };
 

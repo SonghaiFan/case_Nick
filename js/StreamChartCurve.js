@@ -41,7 +41,8 @@ export default function StreamChartCurve(aqTable, canvas, simulation) {
     const dtg = aqTable
       .groupby("year_month")
       .pivot("key", { value: (d) => (op.sum(d.value) ? op.sum(d.value) : 0) })
-      .orderby("year_month");
+      .orderby("year_month")
+      .slice(0, -1);
 
     const dtg1 = aqTable
       .groupby("year_month")

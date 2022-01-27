@@ -11,14 +11,7 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
     const width = canvas.attr("width") - margin.left - margin.right,
       height = canvas.attr("height") - margin.top - margin.bottom;
 
-    const g1 = canvas.select("#figure1Group"),
-      g2 = canvas.select("#figure2Group"),
-      g3 = canvas.select("#figure3Group"),
-      gm = canvas.select("#morphGroup"),
-      gx = canvas.select("#xAxisGroup"),
-      gy = canvas.select("#yAxisGroup");
-
-    gm.selectAll("*").remove();
+    const g2 = canvas.select("#figure2Group");
 
     g2.transition()
       .duration(750)
@@ -142,19 +135,10 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
         const rectEner = enter
           .append("rect")
           .attr("class", (d, i) => "mrect" + d.id)
-          .attr("x", (d, i) =>
-            idArray.length < 3
-              ? xScale(xValue(d)) +
-                Math.max(
-                  0,
-                  xScale.bandwidth() * Math.random() -
-                    Math.min(300, xScale2.bandwidth())
-                )
-              : xScale(xValue(d)) + xScale2(xValue2(d))
-          )
+          .attr("x", (d) => xScale(xValue(d)) + xScale2(xValue2(d)))
           .attr("y", (d) => yScale(yValue(d)) + yScale2(yValue2(d)))
           .attr("height", Math.min(25, yScale2.bandwidth()))
-          .attr("width", Math.min(300, xScale2.bandwidth()))
+          .attr("width", Math.min(100, xScale2.bandwidth()))
           .style("opacity", 0)
           .attr("fill", (d) => colorScale(d[groupKey]));
 
@@ -173,7 +157,7 @@ export default function UnitchartGridLayoutKey(aqTable, canvas, simulation) {
           .attr("x", (d) => xScale(xValue(d)) + xScale2(xValue2(d)))
           .attr("y", (d) => yScale(yValue(d)) + yScale2(yValue2(d)))
           .attr("height", Math.min(25, yScale2.bandwidth()))
-          .attr("width", Math.min(300, xScale2.bandwidth()))
+          .attr("width", Math.min(100, xScale2.bandwidth()))
           .style("opacity", 1)
           .attr("fill", (d) => colorScale(d[groupKey]));
       },

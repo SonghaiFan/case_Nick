@@ -6,29 +6,48 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: coral;
+  color: white;
+  background-image: linear-gradient(to top, black 0%, black 100%);
 }
 
 p {
   margin: 0;
-  font-size: 1em;
-  font-weight: 300;
+  font-weight: 400;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 16px;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 #intro {
   max-width: 40rem;
   margin: 1rem auto;
-  margin-bottom: 250px;
+  margin-bottom: 320px;
   text-align: center;
 }
 
-.intro_hed {
+.subintro {
+  max-width: 40rem;
+  margin: 1rem auto;
+  margin-bottom: 320px;
+  text-align: left;
+  /* white-space: pre; */
+}
+
+.intro__hed {
   font-size: 4em;
   margin: 2rem auto 0.5rem auto;
 }
 
-.intro_dek {
-  font-size: 1.5em;
+.subintro__hed {
+  font-size: 2em;
   margin: 2rem auto 0.5rem auto;
 }
 
@@ -36,42 +55,60 @@ p {
   height: 640px;
 }
 
-#scrolly {
+.chapter {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  background-color: white;
+  /* background-color: white; */
   background-color: black;
-  color: black;
+  /* color: black; */
   color: white;
   padding: 1rem;
 }
 
-#scrolly > * {
+.chapter > * {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 
 article {
   position: relative;
   padding: 0 1rem;
-  max-width: 30rem;
-}
-
-nav {
-  text-align: center;
+  max-width: 25rem;
 }
 
 figure {
+  /* background-color: gray; */
+  position: -webkit-sticky;
   position: sticky;
+  width: 100%;
   margin: 0;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
   shape-rendering: optimizeSpeed;
   z-index: 0;
+}
+
+figure p {
+  text-align: center;
+  padding: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  font-weight: 900;
+  /* color: #fff; */
 }
 
 .step {
   margin: 0 auto 2rem auto;
   padding: 5px;
-  /* box-shadow: 10px 10px 10px rgba(48, 48, 48, 0.623); */
-  box-shadow: 0px 10px 75px -3px rgba(117, 94, 94, 0.24);
   opacity: 0.1;
   transition: ease, 1s;
 }
@@ -103,19 +140,61 @@ text {
   font-size: 1.5em;
 }
 
-#tooltipContainer {
-  display: none;
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 5px;
-  box-shadow: 10px 10px 10px rgba(120, 120, 120, 0.2);
-  border: 2px solid white;
-}
-
 .hover-link {
-  border-bottom: 1px dotted;
   cursor: pointer;
   background: none;
+}
+
+#navbar {
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Style the links inside the navigation bar */
+#navbar a {
+  float: left;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+#navbar a:hover {
+  background-color: rgb(255, 255, 255);
+  color: black;
+}
+
+.figure__layout1 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  flex-flow: row;
+}
+
+.figure__layout2 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.subplot {
+  margin: auto;
+  border: 1px solid black;
+  flex-grow: 1;
+  transition: flex-grow 750ms linear;
 }
 
 .linksGroup {
@@ -132,9 +211,9 @@ text {
 }
 
 .linkGroup:hover {
-  stroke: black;
+  /* stroke: black; */
   stroke: lightgray;
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .nodeGroup text {

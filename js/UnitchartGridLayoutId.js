@@ -11,16 +11,7 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
     const width = canvas.attr("width") - margin.left - margin.right,
       height = canvas.attr("height") - margin.top - margin.bottom;
 
-    const g1 = canvas.select("#figure1Group"),
-      g2 = canvas.select("#figure2Group"),
-      g3 = canvas.select("#figure3Group"),
-      gm = canvas.select("#morphGroup"),
-      gx = canvas.select("#xAxisGroup"),
-      gy = canvas.select("#yAxisGroup");
-
-    const tooltip = d3.select("#tooltipContainer");
-
-    gm.selectAll("*").remove();
+    const g1 = canvas.select("#figure1Group");
 
     g1.transition()
       .duration(750)
@@ -99,29 +90,6 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
         return rectExitTransition;
       }
     );
-
-    //   const rects = g1.selectAll("rect").raise();
-
-    //   rects
-    //     .on("mouseover", (e, d) => {
-    //       tooltip
-    //         .style("display", "block")
-    //         .html(() => `${d.id} ${d.publisher}<br><b>${d.heading}</b>`);
-    //     })
-    //     .on("mousemove", (e, d) => {
-    //       tooltip
-    //         .style("left", d3.pointer(e)[0] + margin.left + "px")
-    //         .style("top", d3.pointer(e)[1] + "px");
-    //     })
-    //     .on("mouseout", () => {
-    //       tooltip.style("display", "none");
-    //     })
-    //     .on("click", function (e, d) {
-    //       let stroke_status = d3.select(this).attr("stroke");
-    //       d3.select(this)
-    //         .attr("stroke-width", "3")
-    //         .attr("stroke", stroke_status == "none" ? "red" : "none");
-    //     });
   }
 
   chart.margin = function (value) {
