@@ -199,7 +199,6 @@ text {
 
 .linksGroup {
   fill: none;
-  stroke: lightgray;
   stroke: gray;
   opacity: 0.4;
   mix-blend-mode: multiply;
