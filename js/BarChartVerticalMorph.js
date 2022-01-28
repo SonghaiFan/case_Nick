@@ -179,19 +179,17 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
           const rectUpdateTransition = update
             .transition()
             .duration(750)
-            // .delay((d, i) => d.id * 100 + i * 10)
-            .delay(
-              (d, i) =>
-                (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 + i * 10
+            .delay((d, i) =>
+              keyArray.length - keyArray.indexOf(d[groupKey]) > 5
+                ? 5000 +
+                  (keyArray.length - keyArray.indexOf(d[groupKey])) * 10 +
+                  i * 1
+                : (keyArray.length - keyArray.indexOf(d[groupKey])) * 750 +
+                  i * 10
             )
-            // .delay((d, i) =>
-            //   keyArray.length - keyArray.indexOf(d[groupKey]) > 3
-            //     ? 5000 +
-            //       (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 +
-            //       i * 10
-            //     : (keyArray.length - keyArray.indexOf(d[groupKey])) * 750 +
-            //       i * 10
-            // )
+            .attr("stroke", (d) => colorScale(d.key))
+            .attr("stroke-width", 5)
+            .transition()
             .attr("y", (d) => yScale(d[groupKey]))
             .transition()
             .attr("x", (d) => xScale(d.value_stackmin) + margin.left - 100)
@@ -199,7 +197,28 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
             .attr(
               "width",
               (d) => xScale(d.value_stackmax) - xScale(d.value_stackmin)
-            );
+            )
+            .attr("stroke-width", 0);
+
+          // .transition()
+          // .duration(750)
+          // .ease(d3.easeExpIn)
+          // .delay(
+          //   (d, i) =>
+          //     (keyArray.length - keyArray.indexOf(d.key)) * 350 + i * 2
+          // )
+          // .attr("stroke", (d) => colorScale(d.key))
+          // .attr("stroke-width", 10)
+          // .transition()
+          // .attr("y", (d) => yScale(d[groupKey]))
+          // .transition()
+          // .attr("x", (d) => xScale(d.value_stackmin) + margin.left - 100)
+          // .attr("height", yScale.bandwidth())
+          // .attr(
+          //   "width",
+          //   (d) => xScale(d.value_stackmax) - xScale(d.value_stackmin)
+          // )
+          // .attr("stroke-width", 0);
 
           return rectUpdateTransition;
         },

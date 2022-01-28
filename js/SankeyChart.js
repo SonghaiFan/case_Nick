@@ -24,6 +24,8 @@ export default function SankeyChart(aqTable, canvas, simulation) {
     const t = canvas.transition().duration(750);
     const ts = canvas.transition().duration(200);
 
+    const tooltip = d3.select("#tooltipContainer");
+
     ga.transition()
       .duration(750)
       .style("opacity", 1)
@@ -368,6 +370,35 @@ export default function SankeyChart(aqTable, canvas, simulation) {
       })
       .on("mouseout", function (e, d) {
         g1.selectAll("rect").attr("fill", "black");
+      });
+
+    const rects = g1.selectAll("rect");
+
+    rects
+      .on("mouseover", function (e, d) {
+        rects.attr("fill", "black");
+        let overedRect = d3.select(this);
+        overedRect.attr("fill", "white");
+        let overedId = overedRect.data()[0].id;
+        d3.selectAll(`.linkGroup.article${overedId}`)
+          .attr("stroke", "white")
+          .attr("stroke-width", (d) => Math.max(5, d.width))
+          .raise();
+        tooltip
+          .style("display", "block")
+          .html(() => `${d.publisher}<br><b>${d.heading}</b>`);
+      })
+      .on("mouseout", function () {
+        tooltip.style("display", "none");
+        rects.attr("fill", "black");
+        d3.selectAll(".linkGroup")
+          .attr("stroke", "gray")
+          .attr("stroke-width", (d) => Math.max(1, d.width));
+      })
+      .on("mousemove", (e, d) => {
+        tooltip
+          .style("left", d3.pointer(e)[0] + "px")
+          .style("top", d3.pointer(e)[1] + "px");
       });
   }
 

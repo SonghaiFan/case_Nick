@@ -12,6 +12,7 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
       height = canvas.attr("height") - margin.top - margin.bottom;
 
     const g1 = canvas.select("#figure1Group");
+    const tooltip = d3.select("#tooltipContainer");
 
     g1.transition()
       .duration(750)
@@ -90,6 +91,30 @@ export default function UnitchartGridLayout(aqTable, canvas, simulation) {
         return rectExitTransition;
       }
     );
+
+    const rects = g1.selectAll("rect");
+
+    rects
+      .on("mouseover", (e, d) => {
+        tooltip
+          .style("display", "block")
+          .html(() => `${d.publisher}<br><b>${d.heading}</b>`);
+      })
+      .on("mousemove", (e, d) => {
+        tooltip
+          .style("left", d3.pointer(e)[0] + "px")
+          .style("top", d3.pointer(e)[1] + "px");
+      })
+      .on("mouseout", () => {
+        tooltip.style("display", "none");
+      })
+      .on("click", function (e, d) {
+        let stroke_status = d3.select(this).attr("stroke");
+        d3.select(this).attr(
+          "stroke",
+          stroke_status == "white" ? "red" : "white"
+        );
+      });
   }
 
   chart.margin = function (value) {

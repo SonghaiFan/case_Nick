@@ -602,6 +602,24 @@ function handleStepChange({ element, direction, index }) {
     case 18:
       SankeyChart(data_atLeast25groupsIssues, canvas2, simulation).margin({
         top: 100,
+        right: 100,
+        bottom: 100,
+        left: containerWidth1 / 2,
+      })();
+
+      UnitChartForceLayout(data_atLeast25articleIdentity, canvas2, simulation)
+        .margin({
+          top: 200,
+          right: containerWidth1 / 2,
+          bottom: 100,
+          left: 100,
+        })
+        .size(20)();
+      break;
+
+    case 19:
+      SankeyChart(data_atLeast25groupsIssues, canvas2, simulation).margin({
+        top: 100,
         right: 200,
         bottom: 100,
         left: containerWidth1 / 1.95,
@@ -620,7 +638,7 @@ function handleStepChange({ element, direction, index }) {
       })();
       break;
 
-    case 19:
+    case 20:
       SankeyChart(data_atLeast25groupsIssues, canvas2, simulation).margin({
         top: 100,
         right: 100,
@@ -633,9 +651,6 @@ function handleStepChange({ element, direction, index }) {
         canvas2,
         simulation
       )();
-      break;
-
-    case 20:
       break;
   }
 }

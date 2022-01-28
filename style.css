@@ -223,3 +223,13 @@ text {
 .nodeGroup rect:hover {
   stroke: black;
 }
+
+#tooltipContainer {
+  color: black;
+  display: none;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  box-shadow: 10px 10px 10px rgba(120, 120, 120, 0.2);
+  border: 2px solid white;
+}

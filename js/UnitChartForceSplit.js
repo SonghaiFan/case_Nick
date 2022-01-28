@@ -66,7 +66,7 @@ export default function UnitChartForceSplit(aqTable, canvas, simulation) {
       (enter) =>
         enter
           .append("rect")
-          // .attr("y", height * 2)
+          .attr("y", height * 2)
           .call((enter) =>
             enter
               .transition()
