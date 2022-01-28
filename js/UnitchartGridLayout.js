@@ -1,4 +1,4 @@
-export default function UnitchartGridIdLayout(aqTable, canvas, simulation) {
+export default function UnitchartGridLayout(aqTable, canvas, simulation) {
   // CANVAS SETUP
   let margin = {
     top: 100,

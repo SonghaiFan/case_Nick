@@ -1,3 +1,4 @@
+import UnitchartGridLayout from "./js/UnitchartGridLayout.js";
 import UnitchartGridLayoutId from "./js/UnitchartGridLayoutId.js";
 import UnitchartGridLayoutKey from "./js/UnitchartGridLayoutKey.js";
 import BarChartVerticalMorph from "./js/BarChartVerticalMorph.js";
@@ -11,7 +12,6 @@ import StreamChartCurve from "./js/StreamChartCurve.js";
 import StreamChartCurveStackOffsetSilhouette from "./js/StreamChartCurveStackOffsetSilhouette.js";
 import UnitChartForceSplit from "./js/UnitChartForceSplit.js";
 import SankeyChart from "./js/SankeyChart.js";
-import UnitchartGridLayout from "./js/UnitchartGridLayoutId.js";
 
 const figures = d3.selectAll("figure");
 const steps = d3.selectAll(".step");
@@ -334,6 +334,13 @@ function handleStepChange({ element, direction, index }) {
       break;
 
     case 3:
+      canvas1
+        .select("#morphGroup")
+        .selectAll("rect")
+        .transition()
+        .attr("opacity", 0)
+        .end()
+        .then(canvas1.select("#morphGroup").selectAll("*").remove());
       UnitchartGridLayoutId(data_articleIndentity, canvas1, simulation).margin({
         top: 100,
         right: containerWidth1 / 2,
@@ -395,13 +402,9 @@ function handleStepChange({ element, direction, index }) {
         left: 100,
       })();
 
+      canvas1.select("#figure1Group").selectAll("*").remove();
       canvas1.select("#figure2Group").selectAll("*").remove();
 
-      UnitChartForceLayout(
-        data_atLeast25articleIdentity.sample(0),
-        canvas1,
-        simulation
-      )();
       break;
 
     case 6:
@@ -497,11 +500,7 @@ function handleStepChange({ element, direction, index }) {
         left: 100,
       })();
       simulation.stop();
-      UnitchartGridLayoutId(
-        data_atLeast25articleIdentity,
-        canvas2,
-        simulation
-      )();
+      UnitchartGridLayout(data_atLeast25articleIdentity, canvas2, simulation)();
       break;
 
     case 13:
@@ -514,6 +513,7 @@ function handleStepChange({ element, direction, index }) {
       break;
 
     case 14:
+      simulation.stop();
       UnitChartForceSplit(data_atLeast25articleIdentity, canvas2, simulation)();
 
       canvas2.select("#linksGroup").selectAll("*").remove();
@@ -571,6 +571,7 @@ function handleStepChange({ element, direction, index }) {
           left: 100,
         })
         .size(50)();
+
       break;
 
     case 17:
@@ -625,8 +626,7 @@ function handleStepChange({ element, direction, index }) {
         left: containerWidth1 / 1.95,
       })();
       simulation.stop();
-
-      UnitchartGridLayoutId(
+      UnitchartGridLayout(
         data_atLeast25articleIdentity,
         canvas2,
         simulation

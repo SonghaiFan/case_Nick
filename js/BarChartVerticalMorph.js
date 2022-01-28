@@ -185,10 +185,10 @@ export default function BarChartVertical(aqTable, canvas, simulation) {
                   (keyArray.length - keyArray.indexOf(d[groupKey])) * 10 +
                   i * 1
                 : (keyArray.length - keyArray.indexOf(d[groupKey])) * 750 +
-                  i * 10
+                  i * 1
             )
             .attr("stroke", (d) => colorScale(d.key))
-            .attr("stroke-width", 5)
+            .attr("stroke-width", 10)
             .transition()
             .attr("y", (d) => yScale(d[groupKey]))
             .transition()
